@@ -1,14 +1,21 @@
 //fetch data
-async function loadData() {
+async function loadData(isShowall) {
     const url = `https://openapi.programming-hero.com/api/ai/tools`;
     const response = await fetch(url);
     const data = await response.json();
-    displayData(data.data.tools);
+    displayData(data.data.tools, isShowall);
 }
 
 //display data on card
 const dataContainer = document.getElementById('data-container');
-function displayData(tools) {
+function displayData(tools, isShowall) {
+    dataContainer.innerHTML = ``;
+    if(!isShowall && tools.length > 6){
+        tools = tools.splice(0, 6);
+    }
+    else{
+        document.getElementById('show-all-btn').classList.add('hidden');
+    }
     tools.map(tool => {
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('card', 'bg-base-100', 'shadow-xl');
@@ -47,4 +54,8 @@ function addFeatureList(tool) {
     })
 }
 
-loadData();
+document.getElementById('show-all-btn').addEventListener('click', function(){
+    loadData(true);
+})
+
+loadData(false);
