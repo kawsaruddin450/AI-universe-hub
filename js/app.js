@@ -1,17 +1,23 @@
 //fetch data
 const loadingSpinner = document.getElementById('loading');
-async function loadData(isShowall) {
+let isShowall = false;
+let isSort = false;
+async function loadData() {
     loadingSpinner.classList.remove('hidden');
     const url = `https://openapi.programming-hero.com/api/ai/tools`;
     const response = await fetch(url);
     const data = await response.json();
-    displayData(data.data.tools, isShowall);
+    displayData(data.data.tools);
 }
 
 //display data on card
 const dataContainer = document.getElementById('data-container');
-function displayData(tools, isShowall) {
+function displayData(tools) {
     dataContainer.innerHTML = ``;
+    if(isSort === true){
+        tools = tools.sort(sortByDate);
+    }
+
     if (!isShowall && tools.length > 6) {
         document.getElementById('show-all-btn').classList.remove('hidden');
         tools = tools.splice(0, 6);
@@ -47,6 +53,16 @@ function displayData(tools, isShowall) {
         const featureOl = document.getElementById(`feature-ol-${tool.id}`);
         addFeatureList(tool, featureOl);
     })
+}
+
+//sort by date
+function sortByDate(a, b){
+    const dateA = new Date(a.published_in);
+    const dateB = new Date(b.published_in);
+
+    if(dateA < dateB) return 1;
+    else if(dateA > dateB) return -1;
+    return 0;
 }
 
 function addFeatureList(tool, featureParent) {
@@ -152,7 +168,12 @@ function showAccuracy(tool, accuracyParent){
 
 
 document.getElementById('show-all-btn').addEventListener('click', function () {
-    loadData(true);
+    isShowall = true;
+    loadData();
+})
+document.getElementById('sort-btn').addEventListener('click', function(){
+    isSort = true;
+    loadData()
 })
 
-loadData(false);
+loadData();
