@@ -82,7 +82,7 @@ async function showModalData(id) {
                 <p>${tool.pricing ? tool.pricing[2].plan : "Free"}</p>
             </div>
         </div>
-        <div class="flex gap-5 justify-around">
+        <div class="flex gap-5 flex-col sm:flex-row text-center sm:text-left justify-around">
             <div>
                 <h2 class="text-2xl font-semibold my-3">Features: </h2>
                 <ul id="feature-ul"></ul>
@@ -93,7 +93,7 @@ async function showModalData(id) {
             </div>
         </div>
     </div>
-    <div>
+    <div class="rounded-xl border-2 border-s-slate-800">
         <img src="${tool.image_link[0]}" alt="No image found!">
         <h2 class="text-2xl font-semibold text-center my-4">${tool.input_output_examples ? tool.input_output_examples[0].input : "No data found"}</h2>
         <p class="text-center my-4">${tool.input_output_examples ? tool.input_output_examples[0].output : "No data found"}</p>
