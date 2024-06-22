@@ -12,11 +12,11 @@ async function loadData(isShowall) {
 const dataContainer = document.getElementById('data-container');
 function displayData(tools, isShowall) {
     dataContainer.innerHTML = ``;
-    if(!isShowall && tools.length > 6){
+    if (!isShowall && tools.length > 6) {
         document.getElementById('show-all-btn').classList.remove('hidden');
         tools = tools.splice(0, 6);
     }
-    else{
+    else {
         document.getElementById('show-all-btn').classList.add('hidden');
     }
     tools.map(tool => {
@@ -53,16 +53,16 @@ function addFeatureList(tool, featureParent) {
     let count = 1;
     tool.features.map(feature => {
         const featureLi = document.createElement('li');
-        featureLi.innerText =count + ". " + feature;
+        featureLi.innerText = count + ". " + feature;
         featureParent.append(featureLi);
-        count ++;
+        count++;
     })
 }
 //show data in modal
 const modalContent = document.getElementById('modal-content');
-async function showModalData(id){
+async function showModalData(id) {
     const url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
-    const res =await fetch(url);
+    const res = await fetch(url);
     const data = await res.json();
     const tool = data.data;
     modalContent.innerHTML = `
@@ -70,49 +70,76 @@ async function showModalData(id){
         <p class="text-2xl font-semibold text-center">${tool.description}</p>
         <div class="flex justify-center gap-5 my-6">
             <div class="bg-white rounded-xl p-4 text-green-500 text-xl font-semibold text-center">
-                <p class="">${tool.pricing? tool.pricing[0].price: ""}</p>
-                <p>${tool.pricing? tool.pricing[0].plan: "Free"}</p>
+                <p class="">${tool.pricing ? tool.pricing[0].price : ""}</p>
+                <p>${tool.pricing ? tool.pricing[0].plan : "Free"}</p>
             </div>
             <div class="bg-white rounded-xl p-4 text-orange-500 text-xl font-semibold text-center">
-                <p class="">${tool.pricing? tool.pricing[1].price : ""}</p>
-                <p>${tool.pricing? tool.pricing[1].plan : "Free"}</p>
+                <p class="">${tool.pricing ? tool.pricing[1].price : ""}</p>
+                <p>${tool.pricing ? tool.pricing[1].plan : "Free"}</p>
             </div>
             <div class="bg-white rounded-xl p-4 text-red-500 text-xl font-semibold text-center">
-                <p class="">${tool.pricing? tool.pricing[2].price : ""}</p>
-                <p>${tool.pricing? tool.pricing[2].plan: "Free"}</p>
+                <p class="">${tool.pricing ? tool.pricing[2].price : ""}</p>
+                <p>${tool.pricing ? tool.pricing[2].plan : "Free"}</p>
             </div>
         </div>
-        <div class="flex gap-5">
+        <div class="flex gap-5 justify-around">
             <div>
                 <h2 class="text-2xl font-semibold my-3">Features: </h2>
                 <ul id="feature-ul"></ul>
             </div>
-            <div></div>
+            <div>
+                <h2 class="text-2xl font-semibold my-3">Integrations: </h2>
+                <ul id="integration-ul"></ul>
+            </div>
         </div>
     </div>
     <div>
         <img src="${tool.image_link[0]}" alt="No image found!">
-        <h2 class="text-2xl font-semibold text-center my-4">${tool.input_output_examples? tool.input_output_examples[0].input : "No data found"}</h2>
-        <p class="text-center my-4">${tool.input_output_examples? tool.input_output_examples[0].output : "No data found"}</p>
+        <h2 class="text-2xl font-semibold text-center my-4">${tool.input_output_examples ? tool.input_output_examples[0].input : "No data found"}</h2>
+        <p class="text-center my-4">${tool.input_output_examples ? tool.input_output_examples[0].output : "No data found"}</p>
     </div>
     `
     dataModal.showModal();
     const featureUl = document.getElementById('feature-ul')
+    const integrationUl = document.getElementById('integration-ul')
     addFeatureModal(tool, featureUl);
+    addIntegrationModal(tool, integrationUl);
 }
 
-function addFeatureModal(tool, featureParent){
+function addFeatureModal(tool, featureParent) {
     // console.log(tool.features);
     const arr = Object.keys(tool.features);
+    let count = 1;
     arr.map(k => {
         const feature = tool.features[k].feature_name;
         const modalLi = document.createElement('li');
-        modalLi.innerText = feature;
+        modalLi.innerText = count + ". " + feature;
         featureParent.appendChild(modalLi);
+        count++;
     })
 }
 
-document.getElementById('show-all-btn').addEventListener('click', function(){
+function addIntegrationModal(tool, integrationParent) {
+    if (tool.integrations === null) {
+        integrationParent.innerHTML = `
+        <h2 class="text-2xl text-center">No Data Found!</h2>
+        `
+    }
+
+    else {
+        const items = tool.integrations;
+        let count = 1;
+        items.forEach(item => {
+            integrationLi = document.createElement('li');
+            integrationLi.innerText = count + ". " + item;
+            integrationParent.appendChild(integrationLi);
+            count++;
+        });
+    }
+}
+
+
+document.getElementById('show-all-btn').addEventListener('click', function () {
     loadData(true);
 })
 
