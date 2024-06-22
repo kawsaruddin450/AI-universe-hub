@@ -1,5 +1,7 @@
 //fetch data
+const loadingSpinner = document.getElementById('loading');
 async function loadData(isShowall) {
+    loadingSpinner.classList.remove('hidden');
     const url = `https://openapi.programming-hero.com/api/ai/tools`;
     const response = await fetch(url);
     const data = await response.json();
@@ -11,6 +13,7 @@ const dataContainer = document.getElementById('data-container');
 function displayData(tools, isShowall) {
     dataContainer.innerHTML = ``;
     if(!isShowall && tools.length > 6){
+        document.getElementById('show-all-btn').classList.remove('hidden');
         tools = tools.splice(0, 6);
     }
     else{
@@ -39,6 +42,7 @@ function displayData(tools, isShowall) {
             </div>
         </div>
         `
+        loadingSpinner.classList.add('hidden');
         dataContainer.appendChild(cardDiv);
         addFeatureList(tool);
     })
