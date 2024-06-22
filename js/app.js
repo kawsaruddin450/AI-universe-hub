@@ -93,7 +93,8 @@ async function showModalData(id) {
             </div>
         </div>
     </div>
-    <div class="rounded-xl border-2 border-s-slate-800">
+    <div class="rounded-xl border-2 border-s-slate-800 p-4">
+        <span class="bg-red-500 py-2 px-4 text-white rounded-lg absolute top-10 right-10 lg:top-28 lg:right-28" id="accuracy-span"></span>
         <img src="${tool.image_link[0]}" alt="No image found!">
         <h2 class="text-2xl font-semibold text-center my-4">${tool.input_output_examples ? tool.input_output_examples[0].input : "No data found"}</h2>
         <p class="text-center my-4">${tool.input_output_examples ? tool.input_output_examples[0].output : "No data found"}</p>
@@ -102,8 +103,10 @@ async function showModalData(id) {
     dataModal.showModal();
     const featureUl = document.getElementById('feature-ul')
     const integrationUl = document.getElementById('integration-ul')
+    const accuracySpan = document.getElementById('accuracy-span')
     addFeatureModal(tool, featureUl);
     addIntegrationModal(tool, integrationUl);
+    showAccuracy(tool, accuracySpan);
 }
 
 function addFeatureModal(tool, featureParent) {
@@ -135,6 +138,15 @@ function addIntegrationModal(tool, integrationParent) {
             integrationParent.appendChild(integrationLi);
             count++;
         });
+    }
+}
+function showAccuracy(tool, accuracyParent){
+    const accuracy = tool.accuracy.score;
+    if(accuracy === null){
+        accuracyParent.classList.add('hidden');
+    }
+    else{
+        accuracyParent.innerText = (accuracy*100) + "% accuracy";
     }
 }
 
