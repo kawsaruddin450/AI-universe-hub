@@ -37,24 +37,78 @@ function displayData(tools, isShowall) {
                     <h2 class="text-xl font-bold">${tool.name}</h2>
                     <p><i class="fa-regular fa-calendar mr-2 mt-2"></i> ${tool.published_in}</p>
                 </div>
-                <button class="btn btn-danger-outline rounded-full"><i
+                <button class="btn btn-danger-outline rounded-full" onclick="showModalData('${tool.id}')"><i
                         class="text-red-300 fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
         `
         loadingSpinner.classList.add('hidden');
         dataContainer.appendChild(cardDiv);
-        addFeatureList(tool);
+        const featureOl = document.getElementById(`feature-ol-${tool.id}`);
+        addFeatureList(tool, featureOl);
     })
 }
-function addFeatureList(tool) {
+
+function addFeatureList(tool, featureParent) {
     let count = 1;
-    const featureOl = document.getElementById(`feature-ol-${tool.id}`);
     tool.features.map(feature => {
         const featureLi = document.createElement('li');
         featureLi.innerText =count + ". " + feature;
-        featureOl.append(featureLi);
+        featureParent.append(featureLi);
         count ++;
+    })
+}
+//show data in modal
+const modalContent = document.getElementById('modal-content');
+async function showModalData(id){
+    const url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
+    const res =await fetch(url);
+    const data = await res.json();
+    const tool = data.data;
+    modalContent.innerHTML = `
+    <div class="bg-rose-100 p-5 rounded-xl">
+        <p class="text-2xl font-semibold text-center">${tool.description}</p>
+        <div class="flex justify-center gap-5 my-6">
+            <div class="bg-white rounded-xl p-4 text-green-500 text-xl font-semibold text-center">
+                <p class="">${tool.pricing? tool.pricing[0].price: ""}</p>
+                <p>${tool.pricing? tool.pricing[0].plan: "Free"}</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 text-orange-500 text-xl font-semibold text-center">
+                <p class="">${tool.pricing? tool.pricing[1].price : ""}</p>
+                <p>${tool.pricing? tool.pricing[1].plan : "Free"}</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 text-red-500 text-xl font-semibold text-center">
+                <p class="">${tool.pricing? tool.pricing[2].price : ""}</p>
+                <p>${tool.pricing? tool.pricing[2].plan: "Free"}</p>
+            </div>
+        </div>
+        <div class="flex gap-5">
+            <div>
+                <h2 class="text-2xl font-semibold my-3">Features: </h2>
+                <ul id="feature-ul"></ul>
+            </div>
+            <div></div>
+        </div>
+    </div>
+    <div>
+        <img src="${tool.image_link[0]}" alt="No image found!">
+        <h2 class="text-2xl font-semibold text-center my-4">${tool.input_output_examples? tool.input_output_examples[0].input : "No data found"}</h2>
+        <p class="text-center my-4">${tool.input_output_examples? tool.input_output_examples[0].output : "No data found"}</p>
+    </div>
+    `
+    dataModal.showModal();
+    const featureUl = document.getElementById('feature-ul')
+    addFeatureModal(tool, featureUl);
+}
+
+function addFeatureModal(tool, featureParent){
+    // console.log(tool.features);
+    const arr = Object.keys(tool.features);
+    arr.map(k => {
+        const feature = tool.features[k].feature_name;
+        const modalLi = document.createElement('li');
+        modalLi.innerText = feature;
+        featureParent.appendChild(modalLi);
     })
 }
 

@@ -15,14 +15,29 @@
     </header>
     <main>
         <section class="hidden" id="loading">
-            <span id="loading-spinner" class="my-40 text-center mx-auto block loading loading-spinner loading-lg"></span>
+            <span id="loading-spinner"
+                class="my-40 text-center mx-auto block loading loading-spinner loading-lg"></span>
         </section>
-        <section id="data-container" class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-between items-center gap-5">
+        <section id="data-container"
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-between items-center gap-5">
 
         </section>
         <div class="container mx-auto text-center my-12">
             <button class="btn btn-error px-12 text-white hidden" id="show-all-btn">Show All</button>
         </div>
+        <section>
+            <!-- You can open the modal using ID.showModal() method -->
+            <dialog id="dataModal" class="modal">
+                <div class="modal-box max-w-max p-24">
+                    <form method="dialog">
+                        <button class="btn btn-sm btn-circle btn-error text-white absolute right-2 top-2">✕</button>
+                    </form>
+                    <div id="modal-content" class="grid grid-cols-2 gap-5">
+                        
+                    </div>
+                </div>
+            </dialog>
+        </section>
     </main>
 
     <script src="https://kit.fontawesome.com/51766868f9.js" crossorigin="anonymous"></script>
